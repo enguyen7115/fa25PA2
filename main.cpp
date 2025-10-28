@@ -127,8 +127,7 @@ void generateCodes(int root, string codes[]) {
         //For account
     }
 
-    stack<pair<int, string>> stack;
-
+    stack<pair<int, string>> stack; //Btw, what is a pair??? How do you make pairs :sob:
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
