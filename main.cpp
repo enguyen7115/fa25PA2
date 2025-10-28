@@ -124,7 +124,7 @@ void generateCodes(int root, string codes[]) {
         return;
 
     if(leftArr[root] == -1 || rightArr[root] == -1) {
-
+        //For account
     }
 
     stack<pair<int, string>> stack;
