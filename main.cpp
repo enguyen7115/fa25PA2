@@ -102,6 +102,9 @@ int buildEncodingTree(int nextFree) {
 
         weightArr[n] = weightArr[firstSmallestNode] + weightArr[secondSmallestNode];
         weightArr[firstSmallestNode] = weightArr[secondSmallestNode] = -1;
+        //Forgot to set leftArr and rightArr
+        leftArr[n] = firstSmallestNode;
+        rightArr[n] = secondSmallestNode;
         heap.push(n, weightArr);
     }
 
@@ -114,11 +117,18 @@ int buildEncodingTree(int nextFree) {
     return root; // placeholder
 }
 
+//I don't even know where to start :sob:. Let's start with edge cases
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
+    if(root == -1)
+        return;
+
+    if(leftArr[root] == -1 || rightArr[root] == -1) {
+
+    }
+
     stack<pair<int, string>> stack;
 
-    
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
