@@ -91,31 +91,34 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
     MinHeap heap; //Create the MinHeap Object
     for (int i = 0; i < nextFree; i++) {
-        heap.push(i - 1, weightArr); //Push all node indices into the heap.}
+        heap.push(i, weightArr); //Push all node indices into the heap.
     }
 
-    int n = 0;
     while (heap.size > 1) {
         int firstSmallestNode = heap.pop(weightArr);
         int secondSmallestNode = heap.pop(weightArr);
 
+        int n = nextFree++; //"New" parent node. We need to make a new node so that we are able to add the previous nodes together. The last n would not have worked because it wasn't based on anything valuable.
+
         weightArr[n] = weightArr[firstSmallestNode] + weightArr[secondSmallestNode];
         weightArr[firstSmallestNode] = weightArr[secondSmallestNode] = -1;
-        heap.push(firstSmallestNode, weightArr);
-
-        n++;
+        heap.push(n, weightArr);
     }
 
-    cout << heap.data[0] << endl;
-    cout << weightArr[0] << endl;
+    int root;
+    if(heap.size == 1)
+        root = heap.pop(weightArr);
+    else
+        root = -1;
 
-    return heap.data[0]; // placeholder
+    return root; // placeholder
 }
 
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
     stack<pair<int, string>> stack;
 
+    
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
