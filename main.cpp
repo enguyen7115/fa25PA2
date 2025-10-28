@@ -121,13 +121,22 @@ int buildEncodingTree(int nextFree) {
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
     if(root == -1)
-        return;
+        return; //Does not exist
 
     if(leftArr[root] == -1 || rightArr[root] == -1) {
-        //For account
+        char c = charArr[root]; //Character at root
+        if(c >= 'a' && c <= 'z') //Make sure character is lowercase
+            codes[c - 'a'] = "0"; //Since either the left or right side of the heap does not exist, but the root does, it has to be on the left side, so we move to 0. The code array now gets the position of where c is. Since we made c an array of 'a' + i, we can now subtract 'a' to get the same character.
+        return;
     }
 
     stack<pair<int, string>> stack; //Btw, what is a pair??? How do you make pairs :sob:
+    stack.push(make_pair(root, ""));
+
+    while(!stack.empty())
+    {
+
+    }
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
