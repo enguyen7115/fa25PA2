@@ -88,23 +88,35 @@ int createLeafNodes(int freq[]) {
 }
 
 // Step 3: Build the encoding tree using heap operations
+/* Creates the minheap tree!
+ * Then, while the heap is greater than 1:
+ *  pops the smallest nodes
+ *  gets the new parent node
+ *  adds the weightarrays
+ *  makes them -1
+ *  Sets the left and right pointer
+ *  Finally, adds new parent into heap.
+ *  Once that is done, it gets the root, pops the root, and then returns it. If the heap exists with only the root, then we pop. If not, there is nothing, thus -1.
+ *
+ */
 int buildEncodingTree(int nextFree) {
-    MinHeap heap; //Create the MinHeap Object
+    MinHeap heap;
     for (int i = 0; i < nextFree; i++) {
-        heap.push(i, weightArr); //Push all node indices into the heap.
+        heap.push(i, weightArr);
     }
 
     while (heap.size > 1) {
         int firstSmallestNode = heap.pop(weightArr);
         int secondSmallestNode = heap.pop(weightArr);
 
-        int n = nextFree++; //"New" parent node. We need to make a new node so that we are able to add the previous nodes together. The last n would not have worked because it wasn't based on anything valuable.
+        int n = nextFree++;
 
         weightArr[n] = weightArr[firstSmallestNode] + weightArr[secondSmallestNode];
         weightArr[firstSmallestNode] = weightArr[secondSmallestNode] = -1;
-        //Forgot to set leftArr and rightArr
+
         leftArr[n] = firstSmallestNode;
         rightArr[n] = secondSmallestNode;
+
         heap.push(n, weightArr);
     }
 
@@ -114,33 +126,48 @@ int buildEncodingTree(int nextFree) {
     else
         root = -1;
 
-    return root; // placeholder
+    return root;
 }
 
-//I don't even know where to start :sob:. Let's start with edge cases
 // Step 4: Use an STL stack to generate codes
+/* Generating the binary coded needed to both encrypt and decrypt.
+ * Check if the root is -1, if it is, this means that there is nothing in the root.
+ * If either left or right array is -1, then we just add either the root only or just the leftarr, thus, either way, it will be 0.
+ * Then we make a stack. Keep going until the stack is empty, which is when both left and right array are done.
+ */
 void generateCodes(int root, string codes[]) {
     if(root == -1)
-        return; //Does not exist
+        return;
 
     if(leftArr[root] == -1 || rightArr[root] == -1) {
-        char c = charArr[root]; //Character at root
-        if(c >= 'a' && c <= 'z') //Make sure character is lowercase
-            codes[c - 'a'] = "0"; //Since either the left or right side of the heap does not exist, but the root does, it has to be on the left side, so we move to 0. The code array now gets the position of where c is. Since we made c an array of 'a' + i, we can now subtract 'a' to get the same character.
+        char c = charArr[root];
+        if(c >= 'a' && c <= 'z')
+            codes[c - 'a'] = "0";
         return;
     }
 
-    stack<pair<int, string>> stack; //Btw, what is a pair??? How do you make pairs :sob:
-    stack.push(make_pair(root, ""));
+    stack<pair<int, string>> stack; //Btw, what is a pair??? How do you make pairs :sob: (It was funny so I kept it)
+    stack.push({root, ""});
 
     while(!stack.empty())
     {
+        pair<int, string> current = stack.top();
+        stack.pop();
 
+        int node = current.first;
+        string code = current.second;
+
+        if(leftArr[node] == -1 && rightArr[node] == -1){
+            char c = charArr[node];
+            if(c >= 'a' && c <= 'z')
+                codes[c - 'a'] = code;
+        } else {
+            if(leftArr[node] != -1)
+                stack.push({leftArr[node], code + "0"});
+            if(rightArr[node] != -1)
+                stack.push({rightArr[node], code + "1"});
+        }
     }
-    // TODO:
-    // Use stack<pair<int, string>> to simulate DFS traversal.
-    // Left edge adds '0', right edge adds '1'.
-    // Record code when a leaf node is reached.
 }
 
 // Step 5: Print table and encoded message

@@ -17,11 +17,11 @@ struct MinHeap {
     MinHeap() { size = 0; }
 
     /* Push to the array. Basically sets the current data at the size to the index. Then adds to the size so size
-     * goes to the next open array.
+     * goes to the next open available spot in the array.
      * Upheap to repair the node structure.
      */
     void push(int idx, int weightArr[]) {
-        if(size >= 63) //Check if the heap is full.
+        if(size >= 63)
         {
             cout << "Too much data in the heap" << endl;
             return;
@@ -29,7 +29,7 @@ struct MinHeap {
         data[size] = idx;
 
         size++;
-        upheap(size-1, weightArr); //Repair Heap
+        upheap(size-1, weightArr);
     }
 
     /*
@@ -49,11 +49,16 @@ struct MinHeap {
         size--;
 
         if(size > 0)
-            downheap(0, weightArr); //Downheap to repair the Heap
+            downheap(0, weightArr);
         return removedInt;
     }
 
     //Repair the Heap going down. Check if the parent weight is smaller than the child. It will then switch.
+    /*
+     * Have base cases for when the position is greater than or the size or if the position is less than 0.
+     * Another base case for when nothing is in the array.
+     * Have a loop, while there a parent that is greater than 0, we keep going and swapping if necessary.
+     */
     void upheap(int pos, int weightArr[]) {
         // TODO: swap child upward while smaller than parent
         if(pos < 0 || pos >= size)
@@ -65,7 +70,6 @@ struct MinHeap {
         if(size == 0)
             return;
 
-        //While loop for upheap to break out easier and to set i = parent instead of ++;
         int i = pos;
         while(i > 0)
         {
@@ -74,7 +78,7 @@ struct MinHeap {
             if(data[parent] == -1 || data[i] == -1)
                 break;
 
-            if(weightArr[data[i]] >= weightArr[data[parent]] && data[i] >= data[parent]) //The data[i] inside the weightArr is so we can get the weightArr of the number, even after we move the nodes around.
+            if(weightArr[data[i]] >= weightArr[data[parent]] && data[i] >= data[parent])
                 break;
 
             int dataTemp = data[i];
@@ -85,17 +89,21 @@ struct MinHeap {
     }
 
     //Repair the Heap going down. Check if the current weight is bigger than the child. It will then switch.
+    /*
+     * Have base cases for out of bounds, whether the size is nothing or just 1, and then if there is only one child.
+     * Then do the left and right child until we break out of the array, whenever the leftChild is bigger than the size.
+     * Check weights of both and swaps if necessary.
+     */
     void downheap(int pos, int weightArr[]) {
-        // TODO: swap parent downward while larger than any child
         if(pos < 0 || pos >= 63) {
             cout << "Out of bounds: Downheap" << endl;
             return;
         }
 
-        if(size == 0 || size == 1) //Make sure that if the array is empty or only has the root, then we don't have to check.
+        if(size == 0 || size == 1)
             return;
 
-        if(size == 2) //Only a left child, compare the two, choose which is greater, and then swap if needed
+        if(size == 2)
         {
             if(weightArr[data[0]] >= weightArr[data[1]])
             {
@@ -117,14 +125,10 @@ struct MinHeap {
             if(leftChild >= size)
                 break;
 
-            //Moving it so that it doesn't have the continue steps, we swap at the end. Adding a smallest
-
             int smallestChild = leftChild;
 
-            //Check if the left child or right child is smaller
             if(rightChild < size)
             {
-                //Checking if both data are available
                 if(data[rightChild] != -1 && data[leftChild] != -1)
                 {
                     if(weightArr[data[rightChild]] < weightArr[data[leftChild]] && data[rightChild] < data[leftChild])
@@ -143,7 +147,7 @@ struct MinHeap {
             data[parent] = data[smallestChild];
             data[smallestChild] = dataTemp;
 
-            parent = smallestChild; //Instead of both ifs return parent = leftChild or parent = rightChild, we have one that just has the smallest child.
+            parent = smallestChild;
         }
     }
 };
